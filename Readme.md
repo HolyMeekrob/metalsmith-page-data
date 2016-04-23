@@ -42,7 +42,8 @@ var config = [{
 	pattern: 'blog/**/*.html',
 	data: {
 		layout: 'blog.html'
-	}
+	},
+	override: true
 ]};
 
 Metalsmith
