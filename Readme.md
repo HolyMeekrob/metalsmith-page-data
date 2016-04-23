@@ -39,7 +39,7 @@ value that isn't explicity ```true``` will be treated as false, including
 ``` js
 // Set all blog posts to use a common layout
 var config = [{
-	pattern: 'blog/**/*.html,
+	pattern: 'blog/**/*.html',
 	data: {
 		layout: 'blog.html'
 	}
