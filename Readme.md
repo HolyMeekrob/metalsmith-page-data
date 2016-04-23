@@ -2,7 +2,7 @@
 
 A Metalsmith plugin to insert page metadata programatically. This is useful if
 you always want to add the same metadata to a group of files that can be
-matched using[glob expressions][globUrl]. Instead of having to manually
+matched using [glob expressions][globUrl]. Instead of having to manually
 enter that metadata into each page (and the risks of forgetting to do so or
 making typos), you can use this plugin.
 
