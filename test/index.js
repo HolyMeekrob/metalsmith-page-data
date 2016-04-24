@@ -29,19 +29,25 @@ test('no configuration', (assert) => {
 });
 
 test('configuration is missing pattern', (assert) => {
-	let err = undefined;
-	const done = (e) => {
-		err = e;
-	}
+	const files = getFiles();
 
+	let doneCalled = false;
+	const done = () => {
+		doneCalled = true;
+	};
+
+	const newVal = { foo: 'bar' };
 	const config = [{
 		data: {
-			prop: 'new val'
+			otherProp: newVal
 		}
 	}];
 
-	pageData(config)(getFiles(), undefined, done);
-	assert.notEqual(err, undefined, 'done was called with an error');
+	pageData(config)(files, undefined, done);
+	Object.keys(files).forEach((filename) => {
+		assert.deepEqual(files[filename].otherProp, newVal, 'all files are updated');
+	});
+
 	assert.end();
 });
 
@@ -99,3 +105,86 @@ test('pattern filters some files', (assert) => {
 	assert.end();
 });
 
+test('override is set to false', (assert) => {
+	const modifiedFiles = getFiles();
+	const unmodifiedFiles = getFiles();
+
+	let doneCalled = false;
+	const done = () => {
+		doneCalled = true;
+	};
+
+	const newVal = { foo: 'bar' };
+	const otherVal = 'blah';
+
+	const config = [{
+		data: {
+			prop: newVal,
+			otherProp: otherVal
+		},
+		override: false
+	}];
+
+	pageData(config)(modifiedFiles, undefined, done);
+	Object.keys(modifiedFiles).forEach((filename) => {
+		assert.equal(modifiedFiles[filename].prop, unmodifiedFiles[filename].prop,
+			'existing property is unchanged');
+		assert.equal(modifiedFiles[filename].otherProp, otherVal, 'new property is set')
+	});
+	assert.equal(doneCalled, true, 'done() was called');
+	assert.end();
+});
+
+test('override is set to true', (assert) => {
+	const files = getFiles();
+
+	let doneCalled = false;
+	const done = () => {
+		doneCalled = true;
+	};
+
+	const newVal = { foo: 'bar' };
+	const otherVal = 'blah';
+
+	const config = [{
+		data: {
+			prop: newVal,
+			otherProp: otherVal
+		},
+		override: true
+	}];
+
+	pageData(config)(files, undefined, done);
+	Object.keys(files).forEach((filename) => {
+		assert.deepEqual(files[filename].prop, newVal, 'existing property is overriden');
+		assert.equal(files[filename].otherProp, otherVal, 'new property is set')
+	});
+	assert.equal(doneCalled, true, 'done() was called');
+	assert.end();
+});
+
+test('configuration is missing override', (assert) => {
+	const modifiedFiles = getFiles();
+	const unmodifiedFiles = getFiles();
+
+	let doneCalled = false;
+	const done = () => {
+		doneCalled = true;
+	};
+
+	const newVal = { foo: 'bar' };
+
+	const config = [{
+		data: {
+			prop: newVal
+		}
+	}];
+
+	pageData(config)(modifiedFiles, undefined, done);
+	Object.keys(modifiedFiles).forEach((filename) => {
+		assert.equal(modifiedFiles[filename].prop, unmodifiedFiles[filename].prop,
+			'override defaults to false');
+	});
+	assert.equal(doneCalled, true, 'done() was called');
+	assert.end();
+});
