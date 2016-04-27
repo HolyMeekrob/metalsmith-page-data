@@ -23,7 +23,7 @@ Metalsmith
 ## Config
 The config argument should be an array of objects, each of which has the
 following properties:
-- pattern (*optional*) (*default: '*') - a glob expression used to determine
+- pattern (*optional*) (*default: '**') - a glob expression used to determine
 which files will be included. Internally it uses [minimatch][minimatchUrl],
 so please see its documentation for details. If not set, it will default
 to matching all files.
